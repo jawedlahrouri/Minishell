@@ -101,7 +101,7 @@ int execute_command(char *command, char **args, char ***shell_env)
     return status;
 }
 
-int handle_command(char *buffer, ssize_t read, char ***sh_env, int exit_status)
+int handle_command(char *buffer, ssize_t r, char ***sh_env, int exit_status)
 {
     char **args = NULL;
 
@@ -110,7 +110,7 @@ int handle_command(char *buffer, ssize_t read, char ***sh_env, int exit_status)
     if (is_only_spaces(buffer))
         return 0;
     if (my_strcmp(buffer, "\n") != 0)
-        buffer[read - 1] = '\0';
+        buffer[r - 1] = '\0';
     if (my_strncmp(buffer, "cd", 2) == 0)
         return my_cd(buffer, sh_env);
     if (handle_setenv(buffer, sh_env) == 0)

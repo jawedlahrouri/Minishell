@@ -10,9 +10,11 @@
 
 char *get_env_path(char ***shell_env)
 {
-    for (int i = 0; *shell_env[i]; i++) {
-        if (my_strncmp(*shell_env[i], "PATH=", 5) == 0)
-            return *shell_env[i] + 5;
+    if (!shell_env || !*shell_env)
+        return NULL;
+    for (int i = 0; (*shell_env)[i]; i++) {
+        if (my_strncmp((*shell_env)[i], "PATH=", 5) == 0)
+            return (*shell_env)[i] + 5;
     }
     return NULL;
 }
