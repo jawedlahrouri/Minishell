@@ -15,7 +15,7 @@
 #include <pwd.h>
 #include <sys/types.h>
 
-int handle_cddash(char **path, char **prev_dir)
+int handle_cd_dash(char **path, char **prev_dir)
 {
     if (*prev_dir) {
         *path = my_strdup(*prev_dir);
@@ -36,7 +36,7 @@ int my_cd(char *command, char ***shell_env)
     if (!path || my_strcmp(path, "") == 0 || my_strcmp(path, "~") == 0) {
         path = my_getenv(*shell_env, "HOME");
     } else if (my_strcmp(path, "-") == 0) {
-        handle_cddash(&path, &prev_dir);
+        handle_cd_dash(&path, &prev_dir);
         chdir(path);
         return 0;
     }

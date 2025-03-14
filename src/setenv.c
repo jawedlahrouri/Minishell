@@ -99,8 +99,9 @@ void my_setenv(char *command, char ***shell_env)
 
     if (!tab[1]) {
         my_show_word_in_array(*shell_env);
+        return;
     } else if (!tab[1] || !tab[2] || tab[3])
-        my_show_word_in_array(tab);
+        return;
     list = update_or_add(list, tab[1], tab[2]);
     *shell_env = list_to_env(list);
     free_array(tab);
