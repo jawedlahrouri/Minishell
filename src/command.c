@@ -7,28 +7,6 @@
 
 #include "my.h"
 #include "lib.h"
-#include <string.h>
-
-static int is_only_spaces(char *buffer)
-{
-    for (int i = 0; buffer[i]; i++) {
-        if (buffer[i] != ' ' && buffer[i] != '\t' && buffer[i] != '\n')
-            return 0;
-    }
-    return 1;
-}
-
-void my_exit(char *buffer, int exit_status)
-{
-    if (my_strcmp(buffer, "exit") == 0) {
-        my_printf("exit\n");
-        exit(exit_status);
-    }
-    if (my_strncmp(buffer, "exit", 4) == 0) {
-        my_printf("exit: Expression Syntax.\n");
-        exit(1);
-    }
-}
 
 char *create_bin(char *command)
 {
@@ -97,11 +75,11 @@ int execute_command(char *command, char **args, char ***shell_env)
     char *bin = NULL;
     int status;
 
-    if (my_strncmp(command, "./", 2) != 0) 
+    if (my_strncmp(command, "./", 2) != 0)
         bin = get_path(command, shell_env);
     else
         bin = my_strdup(command);
-    if (!bin  || access(bin, F_OK) != 0) {
+    if (!bin || access(bin, F_OK) != 0) {
         my_printf("%s: Command not found.\n", command);
         return 127;
     }
@@ -113,18 +91,11 @@ int execute_command(char *command, char **args, char ***shell_env)
 int handle_command(char *buffer, ssize_t r, char ***sh_env, int exit_status)
 {
     char **args = NULL;
+    int built = 0;
 
-    if (my_str_isalnum(buffer) == 0)
-        return 0;
-    if (is_only_spaces(buffer))
-        return 0;
-    if (my_strcmp(buffer, "\n") != 0)
-        buffer[r - 1] = '\0';
-    if (my_strncmp(buffer, "cd", 2) == 0)
-        return my_cd(buffer, sh_env);
-    if (handle_setenv(buffer, sh_env) == 0)
-        return 0;
-    my_exit(buffer, exit_status);
+    built = handle_builtin(buffer, r, sh_env, exit_status);
+    if (built != -1)
+        return built;
     if (my_strcmp(buffer, "\n") != 0 && my_strcmp(buffer, "env") != 0){
         args = my_str_to_word_array_advanced(buffer, "/-._|");
         return execute_command(args[0], args, sh_env);

@@ -7,13 +7,6 @@
 
 #include "lib.h"
 #include "my.h"
-#include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <pwd.h>
-#include <sys/types.h>
 
 int handle_cd_dash(char **path, char **prev_dir)
 {

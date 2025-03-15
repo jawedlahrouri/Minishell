@@ -7,11 +7,6 @@
 
 #include "my.h"
 #include "lib.h"
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
 
 int open_terminal(char ***shell_env)
 {

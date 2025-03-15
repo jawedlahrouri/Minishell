@@ -14,13 +14,15 @@ NC=\033[0m # No Color
 
 # Variables
 NAME = mysh
-CFLAGS = -g -Wall -Wextra -W -Iinclude -Ilib/my/include -fdiagnostics-color=always
+CFLAGS = -Iinclude -Ilib/my/include -fdiagnostics-color=always
+FLAGS = -g -Wall -Wextra -W
 SRC =	./src/main.c \
 		./src/my_cd.c \
 		./src/command.c\
 		./src/path.c\
 		./src/setenv.c\
-		./src/delete_list.c
+		./src/delete_list.c \
+		./src/builtin.c
 
 OBJ = $(SRC:.c=.o)
 LIBMY = libmy.a
@@ -31,7 +33,7 @@ all: $(LIBMY) $(NAME)
 # Compilation de l'exécutable principal
 $(NAME): $(OBJ)
 	@echo "$(YELLOW)Building $@...$(NC)"
-	@OUTPUT=$$(gcc $(CFLAGS) -o $@ $^ $(LIBMY) 2>&1); \
+	@OUTPUT=$$(gcc $(FLAGS) $(CFLAGS) -o $@ $^ $(LIBMY) 2>&1); \
 	ERRORS=$$(echo "$$OUTPUT" | grep -c "error:"); \
 	WARNINGS=$$(echo "$$OUTPUT" | grep -c "warning:"); \
 	echo "$$OUTPUT"; \
@@ -46,7 +48,7 @@ $(NAME): $(OBJ)
 # Compilation of object files
 %.o: %.c
 	@echo "$(YELLOW)Compiling $<...$(NC)"
-	@$(CC) $(CFLAGS) -c $< -o $@ || { \
+	@$(CC) $(FLAGS) $(CFLAGS) -c $< -o $@ || { \
 		echo "$(RED)BUILD FAILED!$(NC)"; \
 		exit 1; \
 	}
