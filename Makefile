@@ -14,7 +14,7 @@ NC=\033[0m # No Color
 
 # Variables
 NAME = mysh
-CFLAGS = -g -Wall -Wextra -W -Iinclude -Ilib/include -fdiagnostics-color=always
+CFLAGS = -g -Wall -Wextra -W -Iinclude -Ilib/my/include -fdiagnostics-color=always
 SRC =	./src/main.c \
 		./src/my_cd.c \
 		./src/command.c\
@@ -54,12 +54,12 @@ $(NAME): $(OBJ)
 # Compilation of the library
 $(LIBMY):
 	@echo "$(BLUE)Building library...$(NC)"
-	@$(MAKE) --no-print-directory -C lib all
+	@$(MAKE) --no-print-directory -C lib/my all
 
 # Clean up object files and executables
 clean:
 	@echo "$(RED)Cleaning up...$(NC)"
-	@$(MAKE) --no-print-directory -C lib clean
+	@$(MAKE) --no-print-directory -C lib/my/ clean
 	@rm -f $(OBJ)
 
 # Full clean up

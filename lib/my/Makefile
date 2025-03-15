@@ -60,7 +60,6 @@ LIB =	./my_compute_power_rec.c\
 	./my_str_isalnum.c\
 	./free_array.c\
 	./my_compute_square_root.c\
-	./my_strnmajcmp.c\
 	./my_strmajcmp.c\
 	./my_str_isnum.c\
 	./my_copy_word_in_array.c
@@ -74,7 +73,7 @@ all: 	$(NAME)
 $(NAME): $(OBJ_LIB)
 	@echo "$(YELLOW)Building Lib$(NAME)...$(NC)"
 	@ar rcs $(NAME) $(OBJ_LIB)
-	@mv $(NAME) ../
+	@mv $(NAME) ../../
 	@echo "$(GREEN)Build complete!$(NC)"
 
 $(OBJ_LIB): %.o: %.c
