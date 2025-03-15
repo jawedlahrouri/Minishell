@@ -50,8 +50,13 @@ char *get_path(char *command, char ***shell_env)
 
 static pid_t create_process(char *bin, char **args, char ***shell_env)
 {
-    pid_t pid = fork();
+    pid_t pid;
 
+    if (access(bin, X_OK) != 0) {
+        my_printf("%s: Permission denied.\n", bin);
+        return -1;
+    }
+    pid = fork();
     if (pid == 0) {
         execve(bin, args, *shell_env);
         perror("execve failed");
@@ -89,10 +94,14 @@ static int run_command(char *bin, char **args, char ***shell_env)
 
 int execute_command(char *command, char **args, char ***shell_env)
 {
-    char *bin = get_path(command, shell_env);
+    char *bin = NULL;
     int status;
 
-    if (!bin) {
+    if (my_strncmp(command, "./", 2) != 0) 
+        bin = get_path(command, shell_env);
+    else
+        bin = my_strdup(command);
+    if (!bin  || access(bin, F_OK) != 0) {
         my_printf("%s: Command not found.\n", command);
         return 127;
     }

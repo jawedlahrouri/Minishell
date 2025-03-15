@@ -4,8 +4,7 @@
 ** File description:
 ** my.h BOOTCAMP
 */
-#include <stdint.h>
-#include <stdio.h>
+
 #ifndef MY_H_
     #define MY_H_
     #include <stdio.h>
