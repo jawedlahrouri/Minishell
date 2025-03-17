@@ -92,19 +92,42 @@ static char **list_to_env(node_t *list)
     return env;
 }
 
-void my_setenv(char *command, char ***shell_env)
-{
-    char **tab = my_str_to_word_array_advanced(command, "/-._|");
-    node_t *list = env_to_list(*shell_env);
 
+int setenv_error_handling (char **tab, char ***shell_env)
+{
     if (!tab[1]) {
         my_show_word_in_array(*shell_env);
-        return;
-    } else if (!tab[1] || !tab[2] || tab[3])
-        return;
+        return 1;
+    }else if (my_isalpha(tab[1][0]) == 1) {
+        my_printf("setenv: Variable name must begin with a letter.\n");
+        return 1;
+    }
+    if (my_strisalnum(tab[1]) == 0) {
+        my_printf("setenv: Variable name must ");
+        my_printf("contain alphanumeric characters.\n");
+        return 1;
+    } else if (!tab[1] || !tab[2] || tab[3]) {
+        my_printf("setenv: Too many arguments.\n");
+        return 1;
+    }
+    return 0;
+}
+
+int my_setenv(char *command, char ***shell_env)
+{
+    char **tab = my_str_to_word_array_advanced(command, "_:/.+-*@#%&(){}[]|\\^~!?<>=\"");
+    node_t *list = env_to_list(*shell_env);
+
+    if (tab[1] && !tab[2]) {
+        list = update_or_add(list, tab[1], "");
+        return 0;
+    }
+    if (setenv_error_handling(tab, shell_env) == 1)
+        return 1;
     list = update_or_add(list, tab[1], tab[2]);
     *shell_env = list_to_env(list);
     free_array(tab);
+    return 0;
 }
 
 void my_unsetenv(char *command, char ***shell_env)
@@ -121,16 +144,20 @@ void my_unsetenv(char *command, char ***shell_env)
 
 int handle_setenv(char *buffer, char ***shell_env)
 {
+    int exit_status = 0;
+
     if (!*shell_env)
         return 84;
     if (my_strncmp(buffer, "setenv", 6) == 0) {
-        my_setenv(buffer, shell_env);
-        return 0;
+        exit_status = my_setenv(buffer, shell_env);
+        return exit_status;
     } else if (my_strncmp(buffer, "unsetenv", 8) == 0) {
         my_unsetenv(buffer, shell_env);
         return 0;
     }
-    if (my_strcmp(buffer, "env") == 0)
+    if (my_strcmp(buffer, "env") == 0) {
         my_show_word_in_array(*shell_env);
-    return 1;
+        return 0;
+    }
+    return 84;
 }

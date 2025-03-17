@@ -93,8 +93,12 @@ int handle_command(char *buffer, ssize_t r, char ***sh_env, int exit_status)
     char **args = NULL;
     int built = 0;
 
+    if (strncmp(buffer, "/bin ", 5) == 0 || strncmp(buffer, "/bin", 4) == 0) {
+        printf("/bin: Permission denied.\n");
+        return 1;
+    }
     built = handle_builtin(buffer, r, sh_env, exit_status);
-    if (built != -1)
+    if (built != 84)
         return built;
     if (my_strcmp(buffer, "\n") != 0 && my_strcmp(buffer, "env") != 0){
         args = my_str_to_word_array_advanced(buffer, "/-._|");

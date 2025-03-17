@@ -35,6 +35,7 @@ int my_cd(char *command, char ***shell_env)
     }
     if (path && chdir(path) != 0) {
         my_printf("%s: No such file or directory.\n", path);
+        return 1;
     } else {
         if (prev_dir)
             free(prev_dir);

@@ -31,14 +31,16 @@ void my_exit(char *buffer, int exit_status)
 
 int handle_builtin(char *buffer, ssize_t r, char ***sh_env, int exit_status)
 {
+    int built = 0;
+
     if (my_str_isalnum(buffer) == 0 || is_only_spaces(buffer))
         return 0;
     else if (my_strcmp(buffer, "\n") != 0)
         buffer[r - 1] = '\0';
     if (my_strncmp(buffer, "cd", 2) == 0)
         return my_cd(buffer, sh_env);
-    else if (handle_setenv(buffer, sh_env) == 0)
-        return 0;
+    built = handle_setenv(buffer, sh_env);
+        return built;
     my_exit(buffer, exit_status);
-    return -1;
+    return 84;
 }

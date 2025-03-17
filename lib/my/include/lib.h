@@ -73,5 +73,6 @@ void free_array(char **tab);
 int my_isalpha(char c);
 int my_isdigit(char c);
 int my_str_isalnum(char *str);
+int my_strisalnum(char *str);
 
 #endif /*lib.h*/

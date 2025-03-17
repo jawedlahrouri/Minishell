@@ -10,5 +10,5 @@ int my_isalpha(char c)
     if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
         return 0;
     else
-        return 84;
+        return 1;
 }
