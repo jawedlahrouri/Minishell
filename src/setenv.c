@@ -93,7 +93,7 @@ static char **list_to_env(node_t *list)
 }
 
 
-int setenv_error_handling (char **tab, char ***shell_env)
+int setenv_error_handling (char **tab, char ***shell_env, int nbr)
 {
     if (!tab[1]) {
         my_show_word_in_array(*shell_env);
@@ -106,40 +106,56 @@ int setenv_error_handling (char **tab, char ***shell_env)
         my_printf("setenv: Variable name must ");
         my_printf("contain alphanumeric characters.\n");
         return 1;
-    } else if (!tab[1] || !tab[2] || tab[3]) {
+    } else if (2 < nbr) {
         my_printf("setenv: Too many arguments.\n");
         return 1;
     }
     return 0;
 }
 
+static int count_tab(char **tab)
+{
+    int i = 0;
+
+    for (; tab[i] != NULL; i++);
+    return i;
+}
+
 int my_setenv(char *command, char ***shell_env)
 {
     char **tab = my_str_to_word_array_advanced(command, "_:/.+-*@#%&(){}[]|\\^~!?<>=\"");
     node_t *list = env_to_list(*shell_env);
+    int nbr = count_tab(tab);
 
+    if (setenv_error_handling(tab, shell_env, nbr) == 1)
+        return 1;
     if (tab[1] && !tab[2]) {
         list = update_or_add(list, tab[1], "");
+        *shell_env = list_to_env(list);
+        free_array(tab);
         return 0;
     }
-    if (setenv_error_handling(tab, shell_env) == 1)
-        return 1;
     list = update_or_add(list, tab[1], tab[2]);
     *shell_env = list_to_env(list);
     free_array(tab);
     return 0;
 }
 
-void my_unsetenv(char *command, char ***shell_env)
+int my_unsetenv(char *command, char ***shell_env)
 {
     char **tab = my_str_to_word_array_advanced(command, "/-._|");
     node_t *list = env_to_list(*shell_env);
 
-    if (!tab[1] || tab[2])
-        return;
+    if (tab[2])
+        return 0;
+    if (!tab[1]) {
+        my_printf("unsetenv: Too few arguments.\n");
+        return 1;
+    }
     list = remove_element(list, tab[1]);
     *shell_env = list_to_env(list);
     free_array(tab);
+    return 0;
 }
 
 int handle_setenv(char *buffer, char ***shell_env)
@@ -152,8 +168,8 @@ int handle_setenv(char *buffer, char ***shell_env)
         exit_status = my_setenv(buffer, shell_env);
         return exit_status;
     } else if (my_strncmp(buffer, "unsetenv", 8) == 0) {
-        my_unsetenv(buffer, shell_env);
-        return 0;
+        exit_status = my_unsetenv(buffer, shell_env);
+        return exit_status;
     }
     if (my_strcmp(buffer, "env") == 0) {
         my_show_word_in_array(*shell_env);
