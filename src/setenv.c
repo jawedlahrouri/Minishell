@@ -92,13 +92,12 @@ static char **list_to_env(node_t *list)
     return env;
 }
 
-
-int setenv_error_handling (char **tab, char ***shell_env, int nbr)
+int setenv_error_handling(char **tab, char ***shell_env, int nbr)
 {
     if (!tab[1]) {
         my_show_word_in_array(*shell_env);
         return 1;
-    }else if (my_isalpha(tab[1][0]) == 1) {
+    } else if (my_isalpha(tab[1][0]) == 1) {
         my_printf("setenv: Variable name must begin with a letter.\n");
         return 1;
     }
@@ -123,7 +122,8 @@ static int count_tab(char **tab)
 
 int my_setenv(char *command, char ***shell_env)
 {
-    char **tab = my_str_to_word_array_advanced(command, "_:/.+-*@#%&(){}[]|\\^~!?<>=\"");
+    char **tab = my_str_to_word_array_advanced(command,
+        "_:/.+-*@#%&(){}[]|\\^~!?<>=\"");
     node_t *list = env_to_list(*shell_env);
     int nbr = count_tab(tab);
 

@@ -93,8 +93,9 @@ int handle_command(char *buffer, ssize_t r, char ***sh_env, int exit_status)
     char **args = NULL;
     int built = 0;
 
-    if (strncmp(buffer, "/bin ", 5) == 0 || strncmp(buffer, "/bin", 4) == 0) {
-        printf("/bin: Permission denied.\n");
+    if (my_strncmp(buffer, "/bin ", 5) == 0 ||
+        my_strncmp(buffer, "/bin", 4) == 0) {
+        my_printf("/bin: Permission denied.\n");
         return 1;
     }
     built = handle_builtin(buffer, r, sh_env, exit_status);
