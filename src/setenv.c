@@ -106,7 +106,7 @@ int setenv_error_handling (char **tab, char ***shell_env, int nbr)
         my_printf("setenv: Variable name must ");
         my_printf("contain alphanumeric characters.\n");
         return 1;
-    } else if (2 < nbr) {
+    } else if (3 < nbr) {
         my_printf("setenv: Too many arguments.\n");
         return 1;
     }
