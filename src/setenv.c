@@ -129,10 +129,10 @@ int my_setenv(char *command, char ***shell_env)
 
     if (setenv_error_handling(tab, shell_env, nbr) == 1)
         return 1;
-    if (tab[1] && !tab[2]) {
+    if ((tab[1] && !tab[2]) ||
+        (tab[2][0] == '\"' && tab[2][1] == '\"' && my_strlen(tab[2]) == 2)) {
         list = update_or_add(list, tab[1], "");
         *shell_env = list_to_env(list);
-        free_array(tab);
         return 0;
     }
     list = update_or_add(list, tab[1], tab[2]);
