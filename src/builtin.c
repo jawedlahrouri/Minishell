@@ -17,18 +17,6 @@ int is_only_spaces(char *buffer)
     return 1;
 }
 
-void my_exit(char *buffer, int exit_status)
-{
-    if (my_strcmp(buffer, "exit") == 0) {
-        my_printf("exit\n");
-        exit(exit_status);
-    }
-    if (my_strncmp(buffer, "exit", 4) == 0) {
-        my_printf("exit: Expression Syntax.\n");
-        exit(1);
-    }
-}
-
 int handle_builtin(char *buffer, ssize_t r, char ***sh_env, int exit_status)
 {
     int built = 0;
@@ -41,6 +29,5 @@ int handle_builtin(char *buffer, ssize_t r, char ***sh_env, int exit_status)
         return my_cd(buffer, sh_env);
     built = handle_setenv(buffer, sh_env);
         return built;
-    my_exit(buffer, exit_status);
     return 84;
 }
