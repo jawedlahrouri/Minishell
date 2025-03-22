@@ -36,4 +36,6 @@ char *get_env_path(char ***env);
 int handle_setenv(char *buffer, char ***env);
 node_t *remove_element(node_t *list, char *element);
 int handle_builtin(char *buffer, ssize_t r, char ***sh_env);
+int execute_redirections(char *buffer, ssize_t r,
+    char ***sh_env, int exit_status);
 #endif /* !MY_H_ */
