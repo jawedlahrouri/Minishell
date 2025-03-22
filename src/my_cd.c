@@ -80,12 +80,17 @@ int my_cd(char *command, char ***shell_env)
     char *path = strtok(command, " ");
 
     path = strtok(NULL, " ");
-    if (cd_too_many_args())
+    if (cd_too_many_args()) {
+        free(origin);
         return 1;
+    }
     path = handle_cd_path(path, shell_env, &prev_dir);
-    if (!path || cd_handle_errors(path))
+    if (!path || cd_handle_errors(path)) {
+        free(origin);
         return 1;
-    chdir(path);
+    }
+    if (chdir(path) != 0)
+        return 1;
     free(prev_dir);
     prev_dir = origin;
     return 0;

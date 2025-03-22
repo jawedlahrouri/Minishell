@@ -34,7 +34,7 @@ int execute_redirections(char *buffer, ssize_t r,
     while (command != NULL) {
         my_exit(command, exit_status);
         if (*command != '\0') {
-            status = handle_command(command, r, sh_env, exit_status);
+            status = handle_command(command, r, sh_env);
             exit_status = (status != 0) ? status : exit_status;
         }
         command = strtok_r(NULL, ";", &saveptr);
@@ -59,28 +59,29 @@ int open_terminal(char ***sh_env)
         } else
             exit_status = execute_redirections(buffer, r, sh_env, exit_status);
     }
+    free(sh_env);
     free(buffer);
     return exit_status;
 }
 
-int open_non_terminal(char ***shell_env)
+int open_non_terminal(char ***sh_env)
 {
     char *buffer = NULL;
     size_t len = 0;
-    ssize_t read = 0;
+    ssize_t r = 0;
     int exit_status = 0;
 
     while (1) {
-        read = getline(&buffer, &len, stdin);
-        if (read == -1) {
+        r = getline(&buffer, &len, stdin);
+        if (r == -1) {
             return exit_status;
         } else
-            exit_status = handle_command(buffer, read, shell_env, exit_status);
+            exit_status = execute_redirections(buffer, r, sh_env, exit_status);
         if (exit_status != 0)
             break;
     }
-        free(buffer);
-        return exit_status;
+    free(buffer);
+    return exit_status;
 }
 
 int main(int argc, char **argv, char **env)
@@ -101,7 +102,7 @@ int main(int argc, char **argv, char **env)
         my_free_word_array(*shell_env);
         return 1;
     } else {
-        my_free_word_array(*shell_env);
+        free_array(*shell_env);
         return status;
     }
 }

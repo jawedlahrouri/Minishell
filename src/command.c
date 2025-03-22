@@ -88,7 +88,7 @@ int execute_command(char *command, char **args, char ***shell_env)
     return status;
 }
 
-int handle_command(char *buffer, ssize_t r, char ***sh_env, int exit_status)
+int handle_command(char *buffer, ssize_t r, char ***sh_env)
 {
     char **args = NULL;
     int built = 0;
@@ -98,7 +98,7 @@ int handle_command(char *buffer, ssize_t r, char ***sh_env, int exit_status)
         my_printf("/bin: Permission denied.\n");
         return 1;
     }
-    built = handle_builtin(buffer, r, sh_env, exit_status);
+    built = handle_builtin(buffer, r, sh_env);
     if (built != 84)
         return built;
     if (my_strcmp(buffer, "\n") != 0 && my_strcmp(buffer, "env") != 0){

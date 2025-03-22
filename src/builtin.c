@@ -17,7 +17,7 @@ int is_only_spaces(char *buffer)
     return 1;
 }
 
-int handle_builtin(char *buffer, ssize_t r, char ***sh_env, int exit_status)
+int handle_builtin(char *buffer, ssize_t r, char ***sh_env)
 {
     int built = 0;
 
