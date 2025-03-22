@@ -38,6 +38,7 @@ int my_printf(const char *format, ...);
 int my_put_nbr(int nb);
 void my_putchar(char c);
 void my_putstr(char const *str);
+void my_puterror(char const *str);
 
 // Fonctions de manipulation de chaînes
 char *my_revstr(char *str);

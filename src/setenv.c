@@ -98,15 +98,15 @@ int setenv_error_handling(char **tab, char ***shell_env, int nbr)
         my_show_word_in_array(*shell_env);
         return 1;
     } else if (my_isalpha(tab[1][0]) == 1) {
-        my_printf("setenv: Variable name must begin with a letter.\n");
+        my_puterror("setenv: Variable name must begin with a letter.\n");
         return 1;
     }
     if (my_strisalnum(tab[1]) == 0) {
-        my_printf("setenv: Variable name must ");
-        my_printf("contain alphanumeric characters.\n");
+        my_puterror("setenv: Variable name must ");
+        my_puterror("contain alphanumeric characters.\n");
         return 1;
     } else if (3 < nbr) {
-        my_printf("setenv: Too many arguments.\n");
+        my_puterror("setenv: Too many arguments.\n");
         return 1;
     }
     return 0;
@@ -149,7 +149,7 @@ int my_unsetenv(char *command, char ***shell_env)
     if (tab[2])
         return 0;
     if (!tab[1]) {
-        my_printf("unsetenv: Too few arguments.\n");
+        my_puterror("unsetenv: Too few arguments.\n");
         return 1;
     }
     list = remove_element(list, tab[1]);

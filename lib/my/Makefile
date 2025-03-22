@@ -63,7 +63,8 @@ LIB =	./my_compute_power_rec.c\
 	./my_strmajcmp.c\
 	./my_str_isnum.c\
 	./my_copy_word_in_array.c\
-	./my_strisalnum.c
+	./my_strisalnum.c\
+	./my_puterror.c
 
 OBJ_LIB  	=	 $(LIB:.c=.o)
 
