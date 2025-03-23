@@ -171,7 +171,8 @@ int handle_setenv(char *buffer, char ***shell_env)
         exit_status = my_unsetenv(buffer, shell_env);
         return exit_status;
     }
-    if (my_strcmp(buffer, "env") == 0) {
+    if (my_strcmp(buffer, "env") == 0 ||
+        my_strcmp(buffer, "/usr/bin/env") == 0) {
         my_show_word_in_array(*shell_env);
         return 0;
     }

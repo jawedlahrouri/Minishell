@@ -10,7 +10,9 @@
 
 static void my_exit(char *buffer, int exit_status)
 {
-    if (my_strcmp(buffer, "exit") == 0) {
+    char **tab = my_str_to_word_array(buffer);
+
+    if (my_strcmp(tab[0], "exit") == 0 && !tab[1]) {
         my_printf("exit\n");
         exit(exit_status);
     }
