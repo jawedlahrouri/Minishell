@@ -12,13 +12,19 @@ static void my_exit(char *buffer, int exit_status)
 {
     char **tab = my_str_to_word_array(buffer);
 
-    if (my_strcmp(tab[0], "exit") == 0 && !tab[1]) {
-        my_printf("exit\n");
-        exit(exit_status);
-    }
-    if (my_strncmp(buffer, "exit", 4) == 0) {
-        my_printf("exit: Expression Syntax.\n");
-        exit(1);
+    if (!tab[0])
+        return;
+    if (my_strcmp(tab[0], "exit") == 0) {
+        if (tab[1] && tab[1][0] == '|') {
+            return;
+        }
+        if (!tab[1]) {
+            my_printf("exit\n");
+            exit(exit_status);
+        } else {
+            my_printf("exit: Expression Syntax.\n");
+            exit(1);
+        }
     }
 }
 
@@ -74,11 +80,14 @@ int handle_pipe(char *command, ssize_t r, char ***sh_env)
     char *cmd1 = strtok(command, "|");
     char *cmd2 = strtok(NULL, "|");
     int pipefd[2];
-    pid_t pid1;
-    pid_t pid2;
+    pid_t pid1, pid2;
 
-    if (!cmd2)
+    if (!strchr(command, '|') || !command)
         return handle_command(command, r, sh_env);
+    if (!cmd1 || !cmd2 || my_strlen(cmd1) == 0 || my_strlen(cmd2) == 0) {
+        my_printf("Invalid null command.\n");
+        return 1;
+    }
     if (create_pipe(pipefd))
         return 1;
     pid1 = execute_first_command(cmd1, pipefd, r, sh_env);
@@ -89,6 +98,7 @@ int handle_pipe(char *command, ssize_t r, char ***sh_env)
     waitpid(pid2, NULL, 0);
     return 0;
 }
+
 
 static int empty_line_handling(char *buffer, ssize_t r)
 {
