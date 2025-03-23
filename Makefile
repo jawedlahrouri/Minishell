@@ -23,6 +23,7 @@ SRC =	./src/main.c \
 		./src/setenv.c\
 		./src/delete_list.c \
 		./src/builtin.c\
+		./src/pipe.c\
 		./src/redirections.c
 
 OBJ = $(SRC:.c=.o)

@@ -38,4 +38,7 @@ node_t *remove_element(node_t *list, char *element);
 int handle_builtin(char *buffer, ssize_t r, char ***sh_env);
 int execute_redirections(char *buffer, ssize_t r,
     char ***sh_env, int exit_status);
+int handle_redirections(char *command);
+int is_only_spaces(char *buffer);
+char *my_strstr(char *haystack, char *needle);
 #endif /* !MY_H_ */
