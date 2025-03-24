@@ -8,25 +8,43 @@
 #include "my.h"
 #include "lib.h"
 
+#include <unistd.h>
+
+static void display_prompt(int saved_stdout)
+{
+    if (isatty(STDOUT_FILENO)) {
+        dup2(saved_stdout, STDOUT_FILENO);
+        write(STDOUT_FILENO, "$> ", 3);
+    }
+}
+
+static void free_things(char ***sh_env, char *buffer, int saved_stdout)
+{
+    free(sh_env);
+    free(buffer);
+    close(saved_stdout);
+}
+
 int open_terminal(char ***sh_env)
 {
     char *buffer = NULL;
     size_t len = 0;
     ssize_t r = 0;
     int exit_status = 0;
+    int saved_stdout = dup(STDOUT_FILENO);
 
     while (1) {
-        my_printf("$> ");
+        display_prompt(saved_stdout);
         r = getline(&buffer, &len, stdin);
         if (r == -1) {
-            my_printf("exit\n");
+            write(STDOUT_FILENO, "exit\n", 5);
+            close(saved_stdout);
+            free_things(sh_env, buffer, saved_stdout);
             return exit_status;
-        } else
-            exit_status = execute_redirections(buffer, r, sh_env, exit_status);
+        }
+        exit_status = execute_redirections(buffer, r, sh_env, exit_status);
+        dup2(saved_stdout, STDOUT_FILENO);
     }
-    free(sh_env);
-    free(buffer);
-    return exit_status;
 }
 
 int open_non_terminal(char ***sh_env)

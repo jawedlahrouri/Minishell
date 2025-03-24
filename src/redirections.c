@@ -7,6 +7,8 @@
 
 #include "lib.h"
 #include "my.h"
+#include <fcntl.h>
+#include <unistd.h>
 
 int handle_input_redirection(char *command)
 {
@@ -28,24 +30,52 @@ int handle_input_redirection(char *command)
     return 0;
 }
 
-int handle_output_redirection(char *command)
+static int determine_redirection(const char *out_redir)
 {
-    char *out_redir = my_strchr(command, '>');
-    int fd = -1;
-    char *file = NULL;
+    int flags = O_WRONLY | O_CREAT;
 
-    if (!out_redir || out_redir[1] == '>')
-        return 0;
+    if (out_redir[1] == '>')
+        flags |= O_APPEND;
+    else
+        flags |= O_TRUNC;
+    return flags;
+}
+
+static char *get_filename(char *out_redir)
+{
     *out_redir = '\0';
-    file = strtok(out_redir + 1, " ");
-    if (!file)
-        return 1;
-    fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    return strtok(out_redir + (out_redir[1] == '>' ? 2 : 1), " \t\n");
+}
+
+static int setup_output(const char *filename, int flags)
+{
+    int fd = open(filename, flags, 0644);
+
     if (fd == -1)
-        return 1;
+        return -1;
     dup2(fd, STDOUT_FILENO);
     close(fd);
     return 0;
+}
+
+int handle_output_redirection(char *command)
+{
+    char *out_redir = my_strstr(command, ">");
+    int saved_stdout = dup(STDOUT_FILENO);
+    int flags;
+    char *filename = NULL;
+
+    if (!out_redir)
+        return 0;
+    flags = determine_redirection(out_redir);
+    filename = get_filename(out_redir);
+    if (!filename) {
+        my_printf("Missing name for redirect.\n");
+        return 1;
+    }
+    if (setup_output(filename, flags) == -1)
+        return 1;
+    return saved_stdout;
 }
 
 int handle_append_redirection(char *command)

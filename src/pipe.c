@@ -108,8 +108,7 @@ static int empty_line_handling(char *buffer, ssize_t r)
     return 84;
 }
 
-int execute_redirections(char *buffer, ssize_t r,
-    char ***sh_env, int exit_status)
+int execute_redirections(char *buffer, ssize_t r, char ***sh_env, int exit)
 {
     char *command = NULL;
     char *buffer_copy = my_strdup(buffer);
@@ -119,16 +118,16 @@ int execute_redirections(char *buffer, ssize_t r,
     if (empty_line_handling(buffer, r) == 0)
         return 0;
     if (!buffer_copy)
-        return exit_status;
+        return exit;
     command = strtok_r(buffer_copy, ";", &saveptr);
     while (command != NULL) {
-        my_exit(command, exit_status);
+        my_exit(command, exit);
         if (*command != '\0') {
+            handle_redirections(command);
             status = handle_pipe(command, r, sh_env);
-            exit_status = (status != 0) ? status : exit_status;
+            exit = (status != 0) ? status : exit;
         }
         command = strtok_r(NULL, ";", &saveptr);
     }
-    free(buffer_copy);
-    return exit_status;
+    return exit;
 }
