@@ -80,10 +80,9 @@ int handle_pipe(char *command, ssize_t r, char ***sh_env)
     char *cmd1 = strtok(command, "|");
     char *cmd2 = strtok(NULL, "|");
     int pipefd[2];
-    pid_t pid1, pid2;
+    pid_t pid1;
+    pid_t pid2;
 
-    if (!strchr(command, '|') || !command)
-        return handle_command(command, r, sh_env);
     if (!cmd1 || !cmd2 || my_strlen(cmd1) == 0 || my_strlen(cmd2) == 0) {
         my_printf("Invalid null command.\n");
         return 1;
@@ -98,7 +97,6 @@ int handle_pipe(char *command, ssize_t r, char ***sh_env)
     waitpid(pid2, NULL, 0);
     return 0;
 }
-
 
 static int empty_line_handling(char *buffer, ssize_t r)
 {
