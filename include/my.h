@@ -27,6 +27,11 @@ typedef struct node {
     struct node *next;
 } node_t;
 
+typedef struct pid_value_s {
+    int pid1;
+    int pid2;
+} pid_value_t;
+
 /*Function*/
 int main(int argc, char **argv, char **env);
 int my_cd(char *command, char ***env);
