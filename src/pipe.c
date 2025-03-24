@@ -82,7 +82,7 @@ int handle_pipe(char *command, ssize_t r, char ***sh_env)
     int pipefd[2];
     pid_value_t *pids;
 
-    if (!strchr(command, '|') || !command)
+    if (!my_strchr(command, '|') || !command)
         return handle_command(command, r, sh_env);
     if (!cmd1 || !cmd2 || my_strlen(cmd1) == 0 || my_strlen(cmd2) == 0) {
         my_printf("Invalid null command.\n");
