@@ -18,13 +18,6 @@ static void display_prompt(int saved_stdout)
     }
 }
 
-static void free_things(char ***sh_env, char *buffer, int saved_stdout)
-{
-    free(sh_env);
-    free(buffer);
-    close(saved_stdout);
-}
-
 int open_terminal(char ***sh_env)
 {
     char *buffer = NULL;
@@ -39,6 +32,7 @@ int open_terminal(char ***sh_env)
         if (r == -1) {
             write(STDOUT_FILENO, "exit\n", 5);
             close(saved_stdout);
+            free(buffer);
             return exit_status;
         }
         exit_status = execute_redirections(buffer, r, sh_env, exit_status);
