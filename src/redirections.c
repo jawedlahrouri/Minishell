@@ -10,26 +10,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-int handle_input_redirection(char *command)
-{
-    char *in_redir = my_strchr(command, '<');
-    int fd = -1;
-    char *file = NULL;
-
-    if (!in_redir)
-        return 0;
-    *in_redir = '\0';
-    file = strtok(in_redir + 1, " ");
-    if (!file)
-        return 1;
-    fd = open(file, O_RDONLY);
-    if (fd == -1)
-        return 1;
-    dup2(fd, STDIN_FILENO);
-    close(fd);
-    return 0;
-}
-
 static int determine_redirection(const char *out_redir)
 {
     int flags = O_WRONLY | O_CREAT;
@@ -100,8 +80,6 @@ int handle_append_redirection(char *command)
 
 int handle_redirections(char *command)
 {
-    if (handle_input_redirection(command) != 0)
-        return 1;
     if (handle_output_redirection(command) != 0)
         return 1;
     if (handle_append_redirection(command) != 0)
