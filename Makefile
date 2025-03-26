@@ -34,7 +34,7 @@ all: $(LIBMY) $(NAME)
 
 # Compilation de l'exécutable principal
 $(NAME): $(OBJ)
-	@echo "$(YELLOW)Building $@...$(NC)"
+	@echo "Building $@...$(NC)"
 	@OUTPUT=$$(gcc $(FLAGS) $(CFLAGS) -o $@ $^ $(LIBMY) 2>&1); \
 	ERRORS=$$(echo "$$OUTPUT" | grep -c "error:"); \
 	WARNINGS=$$(echo "$$OUTPUT" | grep -c "warning:"); \
@@ -49,7 +49,7 @@ $(NAME): $(OBJ)
 
 # Compilation of object files
 %.o: %.c
-	@echo "$(YELLOW)Compiling $<...$(NC)"
+	@echo "Compiling $<...$(NC)"
 	@$(CC) $(FLAGS) $(CFLAGS) -c $< -o $@ || { \
 		echo "$(RED)BUILD FAILED!$(NC)"; \
 		exit 1; \
