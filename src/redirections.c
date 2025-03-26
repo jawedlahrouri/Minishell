@@ -78,8 +78,15 @@ int handle_append_redirection(char *command)
     return 0;
 }
 
+int handle_input_redirection(char *command)
+{
+    return 0;
+}
+
 int handle_redirections(char *command)
 {
+    if (handle_input_redirection(command) != 0)
+        return 1;
     if (handle_output_redirection(command) != 0)
         return 1;
     if (handle_append_redirection(command) != 0)

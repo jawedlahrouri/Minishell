@@ -46,4 +46,10 @@ int execute_redirections(char *buffer, ssize_t r,
 int handle_redirections(char *command);
 int is_only_spaces(char *buffer);
 char *my_strstr(char *haystack, char *needle);
+int create_pipe(int pipefd[2]);
+pid_t execute_first_command(char *cmd1, int pipefd[2], ssize_t r,
+    char ***sh_env);
+pid_t execute_second_command(char *cmd2, int pipefd[2], ssize_t r,
+        char ***sh_env);
+int handle_pipe(char *command, ssize_t r, char ***sh_env);
 #endif /* !MY_H_ */

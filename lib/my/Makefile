@@ -74,13 +74,13 @@ CFLAGS += -g -Wall -Werror -Wextra -W -Iinclude
 all: 	$(NAME)
 
 $(NAME): $(OBJ_LIB)
-	@echo "$(YELLOW)Building Lib$(NAME)...$(NC)"
+	@echo "Building Lib$(NAME)...$(NC)"
 	@ar rcs $(NAME) $(OBJ_LIB)
 	@mv $(NAME) ../../
 	@echo "$(GREEN)Build complete!$(NC)"
 
 $(OBJ_LIB): %.o: %.c
-	@echo "$(YELLOW)Compiling $<...$(NC)"  # Affiche la ligne de compilation
+	@echo "Compiling $<...$(NC)"  # Affiche la ligne de compilation
 	@$(CC) $(CFLAGS) -c $< -o $@ || { \
 		echo "\033[0;31mBUILD FAILED!$(NC)"; \
 		exit 1; \

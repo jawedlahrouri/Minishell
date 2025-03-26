@@ -24,7 +24,8 @@ SRC =	./src/main.c \
 		./src/delete_list.c \
 		./src/builtin.c\
 		./src/pipe.c\
-		./src/redirections.c
+		./src/redirections.c \
+		./src/handle_pipe.c \
 
 OBJ = $(SRC:.c=.o)
 LIBMY = libmy.a
