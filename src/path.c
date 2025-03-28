@@ -53,12 +53,15 @@ char *search_in_paths(char *paths, char *command)
 char *find_executable(char *command, char ***shell_env)
 {
     char *paths = get_env_path(shell_env);
+    char *paths_copy = NULL;
     char *full_path = NULL;
 
     if (!paths)
         return NULL;
     if (my_strncmp(command, "/bin/", 5) == 0)
         return my_strdup(command);
-    full_path = search_in_paths(my_strdup(paths), command);
+    paths_copy = my_strdup(paths);
+    full_path = search_in_paths(paths_copy, command);
+    free(paths_copy);
     return full_path;
 }

@@ -16,6 +16,10 @@ node_t *add_to_list(node_t *list, const char *new_entry)
     if (!new_node)
         return list;
     new_node->env = my_strdup(new_entry);
+    if (!new_node->env) {
+        free(new_node);
+        return list;
+    }
     new_node->next = NULL;
     if (!list)
         return new_node;
@@ -24,27 +28,6 @@ node_t *add_to_list(node_t *list, const char *new_entry)
         temp = temp->next;
     temp->next = new_node;
     return list;
-}
-
-static node_t *env_to_list(char **env)
-{
-    node_t *head = NULL;
-    node_t *tail = NULL;
-    node_t *new_node = NULL;
-
-    for (int i = 0; env[i]; i++) {
-        new_node = malloc(sizeof(node_t));
-        if (!new_node)
-            return NULL;
-        new_node->env = my_strdup(env[i]);
-        new_node->next = NULL;
-        if (!head)
-            head = new_node;
-        else
-            tail->next = new_node;
-        tail = new_node;
-    }
-    return head;
 }
 
 static node_t *update_or_add(node_t *list, char *key, char *value)
@@ -71,21 +54,31 @@ static node_t *update_or_add(node_t *list, char *key, char *value)
     return add_to_list(list, new_entry);
 }
 
+static void free_env(char **env, int i)
+{
+    for (int j = 0; j < i; j++)
+        free(env[j]);
+    free(env);
+}
+
 static char **list_to_env(node_t *list)
 {
-    int size = 0;
     char **env = NULL;
     node_t *temp = list;
+    int size = 0;
 
-    while (temp) {
+    for (; temp; temp = temp->next)
         size++;
-        temp = temp->next;
-    }
     env = malloc(sizeof(char *) * (size + 1));
     if (!env)
         return NULL;
-    for (int i = 0; list; list = list->next) {
-        env[i] = my_strdup(list->env);
+    temp = list;
+    for (int i = 0; temp; temp = temp->next) {
+        env[i] = my_strdup(temp->env);
+        if (!env[i]) {
+            free_env(env, i);
+            return NULL;
+        }
         i++;
     }
     env[size] = NULL;

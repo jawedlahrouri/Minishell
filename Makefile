@@ -27,6 +27,7 @@ SRC =	./src/main.c \
 		./src/redirections.c \
 		./src/semi_columns.c \
 		./src/handle_redirection.c \
+		./src/transform_env.c \
 
 OBJ = $(SRC:.c=.o)
 LIBMY = libmy.a

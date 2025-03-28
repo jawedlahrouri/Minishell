@@ -37,11 +37,6 @@ static int cd_handle_errors(char *path)
     return 0;
 }
 
-static char *cd_home_path(char ***shell_env)
-{
-    return my_getenv(*shell_env, "HOME");
-}
-
 static int cd_user_path(char *path)
 {
     if (path[0] == '~' && path[1] != '\0') {
@@ -63,7 +58,7 @@ static char *cd_previous_path(char **prev_dir)
 static char *handle_cd_path(char *path, char ***shell_env, char **prev_dir)
 {
     if (!path || my_strcmp(path, "") == 0 || my_strcmp(path, "~") == 0)
-        return cd_home_path(shell_env);
+        return my_getenv(*shell_env, "HOME");
     if (my_strcmp(path, "-") == 0)
         return cd_previous_path(prev_dir);
     if (path[0] == '~' && path[1] != '\0') {
@@ -71,6 +66,35 @@ static char *handle_cd_path(char *path, char ***shell_env, char **prev_dir)
         return NULL;
     }
     return path;
+}
+
+static int handle_cd_errors(char *path, char *command)
+{
+    if (my_strcmp(strtok(command, " "), "-") == 0)
+        free(path);
+    return 1;
+}
+
+int check_and_update_prev_dir(char **prev_dir, char *origin)
+{
+    free(*prev_dir);
+    *prev_dir = origin;
+    return 0;
+}
+
+int process_cd_path(char **path, char ***shell_env, char **prev_dir)
+{
+    *path = handle_cd_path(*path, shell_env, prev_dir);
+    if (!*path || cd_handle_errors(*path))
+        return 1;
+    return 0;
+}
+
+int change_directory(char *path, char *command)
+{
+    if (chdir(path) != 0)
+        return handle_cd_errors(path, command);
+    return 0;
 }
 
 int my_cd(char *command, char ***shell_env)
@@ -84,14 +108,13 @@ int my_cd(char *command, char ***shell_env)
         free(origin);
         return 1;
     }
-    path = handle_cd_path(path, shell_env, &prev_dir);
-    if (!path || cd_handle_errors(path)) {
+    if (process_cd_path(&path, shell_env, &prev_dir)) {
         free(origin);
         return 1;
     }
-    if (chdir(path) != 0)
+    if (change_directory(path, command)) {
+        free(origin);
         return 1;
-    free(prev_dir);
-    prev_dir = origin;
-    return 0;
+    }
+    return check_and_update_prev_dir(&prev_dir, origin);
 }

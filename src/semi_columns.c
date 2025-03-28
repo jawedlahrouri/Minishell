@@ -8,20 +8,31 @@
 #include "my.h"
 #include "lib.h"
 
+static void free_exit_shell(char **tab, int exit_status)
+{
+    free(tab);
+    exit(exit_status);
+}
+
 static void my_exit(char *buffer, int exit_status)
 {
     char **tab = my_str_to_word_array(buffer);
 
-    if (!tab[0])
+    if (!tab[0]) {
+        free(tab);
         return;
+    }
     if (my_strcmp(tab[0], "exit") == 0) {
-        if (tab[1] && tab[1][0] == '|')
+        if (tab[1] && tab[1][0] == '|') {
+            free(tab);
             return;
+        }
         if (!tab[1]) {
             my_printf("exit\n");
-            exit(exit_status);
+            free_exit_shell(tab, exit_status);
         } else {
             my_printf("exit: Expression Syntax.\n");
+            free(tab);
             exit(1);
         }
     }
@@ -42,9 +53,9 @@ static int process_command(char *command, ssize_t r, char ***sh_env, int *exit)
     int redir_status = handle_input_redirection(command);
     int status = 0;
 
-    if (redir_status == -1) {
+    if (redir_status == -1)
         status = 1;
-    } else
+    else
         status = handle_pipe(command, r, sh_env);
     dup2(saved_stdin, STDIN_FILENO);
     close(saved_stdin);

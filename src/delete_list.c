@@ -8,6 +8,19 @@
 #include "my.h"
 #include "lib.h"
 
+
+void free_list(node_t *list)
+{
+    node_t *tmp;
+
+    while (list) {
+        tmp = list;
+        list = list->next;
+        free(tmp->env);
+        free(tmp);
+    }
+}
+
 node_t *remove_first_element(node_t *list, char *element)
 {
     node_t *temp;

@@ -55,4 +55,6 @@ int handle_pipe(char *command, ssize_t r, char ***sh_env);
 int handle_input_redirection(char *command);
 int handle_append_redirection(char *command);
 int handle_output_redirection(char *command);
+void free_list(node_t *list);
+node_t *env_to_list(char **env);
 #endif /* !MY_H_ */

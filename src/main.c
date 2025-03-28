@@ -76,9 +76,10 @@ int main(int argc, char **argv, char **env)
         status = open_non_terminal(shell_env);
     if (status > 100) {
         my_free_word_array(*shell_env);
+        free(shell_env);
         return 1;
-    } else {
-        free_array(*shell_env);
-        return status;
     }
+    free_array(*shell_env);
+    free(shell_env);
+    return status;
 }

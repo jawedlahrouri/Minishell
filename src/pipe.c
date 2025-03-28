@@ -90,10 +90,12 @@ static int handle_piped_commands(char *command, ssize_t r, char ***sh_env)
 {
     char *cmd1 = strtok(command, "|");
     char *cmd2 = strtok(NULL, "|");
+    int status = 0;
 
     if (validate_commands(cmd1, cmd2))
         return 1;
-    return setup_and_execute_pipe(cmd1, cmd2, r, sh_env);
+    status = setup_and_execute_pipe(cmd1, cmd2, r, sh_env);
+    return status;
 }
 
 int handle_pipe(char *command, ssize_t r, char ***sh_env)

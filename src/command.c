@@ -21,8 +21,11 @@ char *get_path(char *command, char ***shell_env)
 {
     char *bin = find_executable(command, shell_env);
 
-    if (!bin && my_strncmp("/bin/", command, 5) == 0)
-        return create_bin(command);
+    if (!bin && my_strncmp("/bin/", command, 5) == 0) {
+        bin = create_bin(command);
+        if (!bin)
+            return NULL;
+    }
     return bin;
 }
 
