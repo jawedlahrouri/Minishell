@@ -69,7 +69,7 @@ int handle_input_redirection(char *command)
         return 0;
     filename = strtok(in_redir + 1, " \t\n");
     if (!filename) {
-        my_printf("Missing filename for redirection.\n");
+        my_printf("Missing name for redirect.\n");
         return -1;
     }
     fd = open(filename, O_RDONLY);
