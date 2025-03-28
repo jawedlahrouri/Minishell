@@ -25,7 +25,8 @@ SRC =	./src/main.c \
 		./src/builtin.c\
 		./src/pipe.c\
 		./src/redirections.c \
-		./src/handle_pipe.c \
+		./src/semi_columns.c \
+		./src/handle_redirection.c \
 
 OBJ = $(SRC:.c=.o)
 LIBMY = libmy.a
@@ -50,20 +51,20 @@ $(NAME): $(OBJ)
 
 # Compilation of object files
 %.o: %.c
-	@echo "Compiling $<...$(NC)"
+	@echo "Compiling $<..."
 	@$(CC) $(FLAGS) $(CFLAGS) -c $< -o $@ || { \
-		echo "$(RED)BUILD FAILED!$(NC)"; \
+		echo "BUILD FAILED!"; \
 		exit 1; \
 	}
 
 # Compilation of the library
 $(LIBMY):
-	@echo "$(BLUE)Building library...$(NC)"
+	@echo "Building library..."
 	@$(MAKE) --no-print-directory -C lib/my all
 
 # Clean up object files and executables
 clean:
-	@echo "$(RED)Cleaning up...$(NC)"
+	@echo "Cleaning up..."
 	@$(MAKE) --no-print-directory -C lib/my/ clean
 	@rm -f $(OBJ)
 

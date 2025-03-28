@@ -24,7 +24,7 @@ static int determine_redirection(const char *out_redir)
 static char *get_filename(char *out_redir)
 {
     *out_redir = '\0';
-    return strtok(out_redir + (out_redir[1] == '>' ? 2 : 1), " \t\n");
+    return strtok(out_redir + (out_redir[1] == '<' ? 2 : 1), " \t\n");
 }
 
 static int setup_output(const char *filename, int flags)
@@ -80,16 +80,24 @@ int handle_append_redirection(char *command)
 
 int handle_input_redirection(char *command)
 {
-    return 0;
-}
+    char *in_redir = my_strstr(command, "<");
+    int saved_stdin = dup(STDIN_FILENO);
+    char *filename = NULL;
+    int fd = 0;
 
-int handle_redirections(char *command)
-{
-    if (handle_input_redirection(command) != 0)
-        return 1;
-    if (handle_output_redirection(command) != 0)
-        return 1;
-    if (handle_append_redirection(command) != 0)
-        return 1;
-    return 0;
+    if (!in_redir)
+        return 0;
+    filename = strtok(in_redir + 1, " \t\n");
+    if (!filename) {
+        my_printf("Missing filename for redirection.\n");
+        return -1;
+    }
+    fd = open(filename, O_RDONLY);
+    if (fd == -1) {
+        my_printf("%s: No such file or directory\n", filename);
+        return -1;
+    }
+    dup2(fd, STDIN_FILENO);
+    close(fd);
+    return saved_stdin;
 }
