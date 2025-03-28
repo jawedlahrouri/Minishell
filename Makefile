@@ -17,17 +17,17 @@ NAME = mysh
 CFLAGS = -Iinclude -Ilib/my/include -fdiagnostics-color=always
 FLAGS = -g -Wall -Wextra -W
 SRC =	./src/main.c \
-		./src/my_cd.c \
-		./src/command.c\
-		./src/path.c\
-		./src/setenv.c\
-		./src/delete_list.c \
-		./src/builtin.c\
-		./src/pipe.c\
-		./src/redirections.c \
-		./src/semi_columns.c \
-		./src/handle_redirection.c \
-		./src/transform_env.c \
+		./src/builtin/my_cd.c \
+		./src/command/command.c\
+		./src/command/path.c\
+		./src/builtin/setenv.c\
+		./src/builtin/delete_list.c \
+		./src/builtin/builtin.c\
+		./src/redirection/pipe.c\
+		./src/redirection/redirections.c \
+		./src/redirection/semi_columns.c \
+		./src/redirection/handle_redirection.c \
+		./src/builtin/transform_env.c \
 
 OBJ = $(SRC:.c=.o)
 LIBMY = libmy.a
