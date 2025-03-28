@@ -50,7 +50,7 @@ int create_pipe(int pipefd[2]);
 pid_t execute_first_command(char *cmd1, int pipefd[2], ssize_t r,
     char ***sh_env);
 pid_t execute_second_command(char *cmd2, int pipefd[2], ssize_t r,
-        char ***sh_env);
+    char ***sh_env);
 int handle_pipe(char *command, ssize_t r, char ***sh_env);
 int handle_input_redirection(char *command);
 int handle_append_redirection(char *command);
