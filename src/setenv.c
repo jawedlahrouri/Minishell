@@ -146,13 +146,12 @@ int my_unsetenv(char *command, char ***shell_env)
     char **tab = my_str_to_word_array_advanced(command, "/-._|");
     node_t *list = env_to_list(*shell_env);
 
-    if (tab[2])
-        return 0;
     if (!tab[1]) {
         my_puterror("unsetenv: Too few arguments.\n");
         return 1;
     }
-    list = remove_element(list, tab[1]);
+    for (int i = 1; tab[i] != NULL; i++)
+        list = remove_element(list, tab[i]);
     *shell_env = list_to_env(list);
     free_array(tab);
     return 0;
