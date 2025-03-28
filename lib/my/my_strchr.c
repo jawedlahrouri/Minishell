@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2025
 ** lib
 ** File description:
-** strchr
+** my_strchr
 */
 
 #include "lib.h"

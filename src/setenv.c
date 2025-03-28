@@ -98,15 +98,15 @@ int setenv_error_handling(char **tab, char ***shell_env, int nbr)
         my_show_word_in_array(*shell_env);
         return 1;
     } else if (my_isalpha(tab[1][0]) == 1) {
-        my_puterror("setenv: Variable name must begin with a letter.\n");
+        my_putstr("setenv: Variable name must begin with a letter.\n");
         return 1;
     }
     if (my_strisalnum(tab[1]) == 0) {
-        my_puterror("setenv: Variable name must ");
-        my_puterror("contain alphanumeric characters.\n");
+        my_putstr("setenv: Variable name must ");
+        my_putstr("contain alphanumeric characters.\n");
         return 1;
     } else if (3 < nbr) {
-        my_puterror("setenv: Too many arguments.\n");
+        my_putstr("setenv: Too many arguments.\n");
         return 1;
     }
     return 0;

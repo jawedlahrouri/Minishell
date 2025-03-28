@@ -92,7 +92,7 @@ int handle_command(char *buffer, ssize_t r, char ***sh_env)
 {
     char **args = NULL;
     int built = 0;
-    char *cmd_end = strstr(buffer, "<");
+    char *cmd_end = my_strstr(buffer, "<");
 
     if (my_strncmp(buffer, "/bin ", 5) == 0 ||
         my_strncmp(buffer, "/bin", 4) == 0) {
